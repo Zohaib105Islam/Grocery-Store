@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity">
+
+    <fragment
+        android:id="@+id/fragmentContainerView2"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/user_nav_graph" />
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/allCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|bottom"
+        android:padding="13dp"
+        android:weightSum="1"
+        android:background="@drawable/bg_bottom_sheet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/allItemCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:id="@+id/ivProductImage"
+                android:layout_width="39dp"
+                android:layout_height="39dp"
+                android:padding="3.9dp"
+                android:src="@drawable/cart"/>
+
+            <TextView
+                android:id="@+id/tvNumberOfProductCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="13dp"
+                android:text="0"
+                android:textSize="18.20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="2.40dp"
+                android:text="ITEM"
+                android:textSize="18.20sp"/>
+
+            <ImageView
+                android:id="@+id/ivShowingProductCart"
+                android:layout_width="19.50dp"
+                android:layout_height="19.50dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="6.50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_arrow_drop_up"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/et_background"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Next"
+                android:textColor="@color/black"
+                android:textSize="16.9sp"
+                android:textStyle="bold"/>
+
+            <ImageButton
+                android:layout_width="19.50dp"
+                android:layout_height="19.50dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="6.50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_arrow_drop_right"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

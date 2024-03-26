@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".user_fragments.OrderDetailsFragment">
+
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/tbOrderDetail"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/yellow"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:navigationIcon="@drawable/arrowback_icon"
+      app:title="Order Detail"
+      app:titleTextColor="@color/black" />
+
+  <View
+      android:id="@+id/view"
+      android:layout_width="match_parent"
+      android:layout_height="1.30dp"
+      android:background="#DAD4D4"
+    app:layout_constraintTop_toBottomOf="@id/tbOrderDetail"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+  <androidx.cardview.widget.CardView
+      android:id="@+id/cardView3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="13dp"
+      app:cardCornerRadius="7.80dp"
+      app:cardUseCompatPadding="true"
+      app:elevation="0dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/view">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="6.50dp"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        tools:layout_editor_absoluteX="5dp">
+
+      <ImageView
+          android:id="@+id/iv1"
+          android:layout_width="39dp"
+          android:layout_height="39dp"
+          android:layout_gravity="center"
+          android:background="@drawable/bg_circle"
+          android:padding="@dimen/_5sdp"
+          android:src="@drawable/ic_backpack"
+          app:tint="#DDDDDD" />
+
+      <View
+          android:id="@+id/view1"
+          android:layout_width="52dp"
+          android:layout_height="5.20dp"
+          android:layout_gravity="center_vertical"
+          android:background="#6B6464" />
+
+      <ImageView
+          android:id="@+id/iv2"
+          android:layout_width="39dp"
+          android:layout_height="39dp"
+          android:layout_gravity="center"
+          android:background="@drawable/bg_circle"
+          android:padding="@dimen/_5sdp"
+          android:src="@drawable/ic_shopping_bag"
+          app:tint="#DDDDDD" />
+
+      <View
+          android:id="@+id/view2"
+          android:layout_width="52dp"
+          android:layout_height="5.20dp"
+          android:layout_gravity="center_vertical"
+          android:background="#6B6464" />
+
+      <ImageView
+          android:id="@+id/iv3"
+          android:layout_width="39dp"
+          android:layout_height="39dp"
+          android:layout_gravity="center"
+          android:background="@drawable/bg_circle"
+          android:padding="@dimen/_5sdp"
+          android:scaleType="centerCrop"
+          android:src="@drawable/ic_local_shipping"
+          app:tint="#DDDDDD"
+          />
+
+      <View
+          android:id="@+id/view3"
+          android:layout_width="52dp"
+          android:layout_height="5.20dp"
+          android:layout_gravity="center_vertical"
+          android:background="#6B6464" />
+
+      <ImageView
+          android:id="@+id/iv4"
+          android:layout_width="39dp"
+          android:layout_height="39dp"
+          android:layout_gravity="center"
+          android:background="@drawable/bg_circle"
+          android:padding="@dimen/_5sdp"
+          android:src="@drawable/ic_done"
+          app:tint="#DDDDDD" />
+
+
+    </LinearLayout>
+
+  </androidx.cardview.widget.CardView>
+
+  <androidx.cardview.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="13dp"
+      app:cardCornerRadius="7.80dp"
+      app:cardUseCompatPadding="true"
+      app:elevation="0dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Ordered Items"
+          android:textSize="18.20sp"
+          android:textStyle="bold"
+          android:layout_margin="13dp"
+          android:textColor="@color/black"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProductItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="13dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    </LinearLayout>
+
+
+  </androidx.cardview.widget.CardView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".auth_fragments.OTPFragment">
+
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/yellow"
+        android:navigationIcon="@drawable/arrowback_icon"
+        android:textAlignment="center"
+        android:title="OTP Verification"
+        android:titleTextColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="We have sent verification code to"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:textSize="@dimen/_15ssp"-->
+        <!--            android:text="+92"/>-->
+        <TextView
+            android:id="@+id/userPhNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="@dimen/_15ssp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/otp_liner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <EditText
+            android:id="@+id/otp1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:imeOptions="actionNext"/>
+
+        <EditText
+            android:id="@+id/otp2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/otp3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/otp4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/otp5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/otp6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:maxLength="1"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@color/grey"
+        android:text="Continue"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otp_liner_layout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

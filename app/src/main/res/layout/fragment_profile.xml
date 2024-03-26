@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".user_fragments.ProfileFragment"
+    android:background="@color/white">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Profile"
+        android:background="@color/yellow"
+        app:titleTextColor="@color/black"
+        app:navigationIcon="@drawable/arrowback_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="My Account"
+        android:textSize="@dimen/_18ssp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbProfile" />
+
+    <TextView
+        android:id="@+id/myEmailPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="03090486206"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/_15ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Your Information"
+        android:textSize="@dimen/_15ssp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myEmailPhone" />
+
+    <TextView
+        android:id="@+id/profileYourOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:drawableLeft="@drawable/ic_yourorders"
+        android:drawableRight="@drawable/ic_arrow_drop_right"
+        android:drawablePadding="10dp"
+        android:text="Your Orders"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <TextView
+        android:id="@+id/profileAddressBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:drawableLeft="@drawable/ic_addressbook"
+        android:drawableRight="@drawable/ic_arrow_drop_right"
+        android:drawablePadding="10dp"
+        android:text="Address Book"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileYourOrders" />
+
+    <TextView
+        android:id="@+id/profileLogout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:drawableLeft="@drawable/ic_logout"
+        android:drawableRight="@drawable/ic_arrow_drop_right"
+        android:drawablePadding="10dp"
+        android:text="Logout"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileAddressBook" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

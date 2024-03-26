@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Blinkit" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+<!--         <item name="colorPrimary"></item>-->
+        <item name="colorPrimaryDark">@color/status_bar_color</item>
+        <!-- Change the navigationBarColor to your desired color -->
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+    </style>
+
+    <style name="Theme.Blinkit" parent="Base.Theme.Blinkit" />
+</resources>

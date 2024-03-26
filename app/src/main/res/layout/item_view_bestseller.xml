@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_103sdp"
+    android:padding="@dimen/_3sdp"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/productImage"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_95sdp"
+        android:background="@drawable/bg_bestseller"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivProduct1"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="6.5dp"
+            android:background="@drawable/bg_product"
+            android:src="@drawable/instant_frozen"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivProduct2"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="6.5dp"
+            android:background="@drawable/bg_product"
+            android:src="@drawable/vegetable"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProduct1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivProduct1"
+            app:layout_constraintTop_toTopOf="@+id/ivProduct1" />
+
+        <ImageView
+            android:id="@+id/ivProduct3"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="6.5dp"
+            android:visibility="gone"
+            android:background="@drawable/bg_product"
+            android:src="@drawable/cold_and_juices"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ivProduct1"
+            app:layout_constraintStart_toStartOf="@+id/ivProduct1"
+            app:layout_constraintTop_toBottomOf="@+id/ivProduct1" />
+
+        <TextView
+            android:id="@+id/tvProductCount"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_margin="6.5dp"
+            android:background="@drawable/bg_product"
+            android:gravity="center"
+            android:text="+1"
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:textSize="23.40sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProduct3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivProduct3"
+            app:layout_constraintTop_toTopOf="@+id/ivProduct3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvProductType"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:maxLines="2"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="Milk, Curd pan kjudfujncudfh"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/productImage" />
+
+    <TextView
+        android:id="@+id/tvTotalProducts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="4 products"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvProductType" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_cart"
+        android:paddingLeft="15dp"
+        android:paddingTop="3dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="3dp"
+        android:text="See all"
+        android:textColor="@color/green"
+        android:textSize="14.30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTotalProducts" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
