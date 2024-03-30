@@ -4,10 +4,10 @@
     <color name="black">#FFFFFFFF</color>
     <color name="white">#FF000000</color>
 
-    <color name="yellow">#FFEB3B</color>
+    <color name="yellow">#ffbe0b</color>
     <color name="green">#26A809</color>
-    <color name="status_bar_color">#FFEB3B</color>
-    <color name="navigation_bar_color">#FFEB3B</color>
+    <color name="status_bar_color">#ffbe0b</color>
+    <color name="navigation_bar_color">#ffbe0b</color>
 
     <color name="grey">#B3A271</color>
 

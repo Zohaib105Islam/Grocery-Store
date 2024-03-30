@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
             viewModel.fetchProductType().collect{
                 adapterBestSeller=AdapterBestSeller(::onSeeAllButtonClicked)
                 binding.rvBestSeller.adapter=adapterBestSeller
-                Utils.showToast(requireContext(),"Best seller products")
+               // Utils.showToast(requireContext(),"Best seller products")
                 adapterBestSeller.differ.submitList(it)
             }
         }
@@ -81,7 +81,13 @@ class HomeFragment : Fragment() {
         val bs=BottomSheetDialog(requireContext())
         bs.setContentView(bsSeeAllBinding.root)
 
-        adapterProduct= AdapterProduct(::onAddBtnClicked,::onIncrementButtonClicked,::onDecrementButtonClicked)
+        adapterProduct= AdapterProduct(
+            viewModel,
+            ::onAddBtnClicked,
+            ::onIncrementButtonClicked,
+            ::onDecrementButtonClicked,
+
+        )
         bsSeeAllBinding.rvProducts.adapter=adapterProduct
         adapterProduct.differ.submitList(productType.products)
         bs.show()

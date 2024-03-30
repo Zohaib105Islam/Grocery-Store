@@ -88,7 +88,13 @@ class CategoryFragment : Fragment() {
                     binding.tvText.visibility=View.GONE
                 }
 
-                adapterProduct = AdapterProduct(::onAddBtnClicked, ::onIncrementButtonClicked, ::onDecrementButtonClicked)
+                adapterProduct = AdapterProduct(
+                    viewModel,
+                    ::onAddBtnClicked,
+                    ::onIncrementButtonClicked,
+                    ::onDecrementButtonClicked,
+
+                )
                 binding.rvProducts.adapter=adapterProduct
                 adapterProduct.differ.submitList(it)
                 //adapterProduct.originalList = it as ArrayList<Product>

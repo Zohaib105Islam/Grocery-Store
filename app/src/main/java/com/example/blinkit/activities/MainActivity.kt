@@ -43,6 +43,23 @@ class MainActivity : AppCompatActivity() , CartListner{
         onBottomSheetNextButtonClicked()
 
         getTotalItemCountInCart()
+
+
+//        val crashButton = Button(this)
+//        crashButton.text = "Test Crash"
+//        crashButton.setOnClickListener {
+//            throw RuntimeException("Test Crash") // Force a crash
+//        }
+//
+//        addContentView(crashButton, ViewGroup.LayoutParams(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT))
+
+        binding.crashBtn.setOnClickListener {
+            throw RuntimeException("Test Crash") // Force a crash
+        }
+
+
     }
 
     private fun onBottomSheetNextButtonClicked() {

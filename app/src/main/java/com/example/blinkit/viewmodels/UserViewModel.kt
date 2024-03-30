@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.example.blinkit.api.ApiUtilities
 import com.example.blinkit.models.Bestseller
 import com.example.blinkit.models.Notification
@@ -68,6 +69,19 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun deleteCartProduct(productId: String) {
         cartProductsDao.deleteCartProduct(productId)
     }
+
+    fun fetchAllProductsForCount(productId: String): LiveData<List<Pair<CartProducts, Int>>> {
+        return cartProductsDao.getAllCartProducts().map { productList ->
+            productList.map { product ->
+                val count = cartProductsDao.getProductCountByRandomId(productId)
+                Pair(product, count ?: 0)
+                //Log.d("hhh","Count ${count}")
+            }
+
+        }
+      //  Log.d("hhh","Count ${count!!}")
+    }
+
 
     fun fetchTotalCartItemCount(): MutableLiveData<Int> {
         val totalItemCount = MutableLiveData<Int>()
@@ -202,12 +216,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateItemCount(product: Product, itemCount: Int) {
-//        productRef.child("AllProducts").child(product.productRandomId!!).child("itemCount")
-//            .setValue(itemCount)
-//        productRef.child("ProductCategory /${product.productCategory}")
-//            .child(product.productRandomId!!).child("itemCount").setValue(itemCount)
-//        productRef.child("ProductType /${product.productType}").child(product.productRandomId!!)
-//            .child("itemCount").setValue(itemCount)
+
 
         FirebaseDatabase.getInstance().getReference("Admins").child(product.adminUid!!).child("AllProducts")
             .child(product.productRandomId!!).child("itemCount").setValue(itemCount)

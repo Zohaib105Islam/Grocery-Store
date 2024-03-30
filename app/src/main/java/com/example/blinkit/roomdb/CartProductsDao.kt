@@ -21,6 +21,12 @@ interface CartProductsDao {
     @Query("SELECT * FROM CartProducts")
     fun getAllCartProducts(): LiveData<List<CartProducts>>
 
+//    @Query("SELECT FROM CartProducts WHERE productCount= :productCount")
+//    fun getOneProductCount(productCount :Int)
+@Query("SELECT productCount FROM CartProducts WHERE productRandomId = :productId")
+fun getProductCountByRandomId(productId: String): Int?
+
+
     @Query("DELETE FROM CartProducts WHERE productRandomId= :productId")
     suspend fun deleteCartProduct(productId :String)
 

@@ -56,7 +56,7 @@ class OrderPlaceActivity : AppCompatActivity() {
 
         getAllCartProducts()
     }
-
+//===================1=================================
     private fun initializePhonePay() {
         val data=JSONObject()
         PhonePe.init(this,PhonePeEnvironment.UAT,Constants.MERCHANT_ID,"")
@@ -96,9 +96,11 @@ class OrderPlaceActivity : AppCompatActivity() {
         val digest=md.digest(bytes)
         return digest.fold("") { str, it-> str + "%02x".format(it)}
     }
-
+//==================1 end=================================
+//==================2 ===============================================
     private fun onPlaceOrderClicked() {
         binding.btnNext.setOnClickListener{
+            com.example.blinkit.utils.Utils.showDialog(this,"Processing")
             viewModel.getAddressStatus().observe(this){status->
                 if (status){
                     // payment work
@@ -119,133 +121,6 @@ class OrderPlaceActivity : AppCompatActivity() {
 
             }
         }
-    }
-val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-
-      if (it.resultCode == RESULT_OK){
-          checkStatus()
-      }
-
-    else{
-        com.example.blinkit.utils.Utils.showToast(this,"Result not Ok ")
-          /// //==================== here API not working that why condition is false and we can done same work in if and else condition
-          checkStatus()
-          ////=====================================================================
-
-    }
-}
-
-    private fun checkStatus() {
-        val xVerify=sha256("/pg/v1/status/${Constants.MERCHANT_ID}/${Constants.merchantTransactionId}${Constants.SALT_KEY}") + "###1"
-        val headers = mapOf(
-            "Content-Type" to "application/json",
-            "X-VERIFY" to xVerify,
-            "X-MERCHANT-ID" to Constants.MERCHANT_ID
-        )
-
-        lifecycleScope.launch {
-            viewModel.checkPayment(headers)
-            viewModel.paymentStatus.collect{status->
-                if (status){
-                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment done")
-
-                    // save order in database , delete product
-                    saveOrder()
-                    deleteCartProducts()
-
-                    startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
-                    finish()
-                }
-                else{
-//==================== here API not working that why condition is false and we can done same work in if and else condition
-                    saveOrder()
-                    deleteCartProducts()
-                    startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
-                    finish()
-//=====================================================================
-                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment not done")
-                }
-            }
-        }
-
-    }
-
-    private fun deleteCartProducts() {
-        lifecycleScope.launch {
-            viewModel.deleteCartProducts()
-            viewModel.savingCartItemCount(0)
-            cartListner?.hideCartLayout()
-        }
-
-    }
-
-
-    private fun saveOrder() {
-        viewModel.getAllCartProducts().observe(this){cartProductsList ->
-
-            if (!cartProductsList.isEmpty()){
-
-                viewModel.getUserAddress { address ->
-                    val order = Orders(
-                        orderId =com.example.blinkit.utils.Utils.getRandomId(),
-                        orderList = cartProductsList,
-                        userAddress = address,
-                        orderStatus = 0,
-                        orderDate = com.example.blinkit.utils.Utils.getCurrentDate(),
-                        orderingUserUid = com.example.blinkit.utils.Utils.currentUser(),
-
-                    )
-                    viewModel.saveOrderedProducts(order,adminUid)
-                    com.example.blinkit.utils.Utils.showToast(this,"Save ordered products")
-
-                    // Notification
-                 //   lifecycleScope.launch {
-//                    cartProductsList.getOrNull(0)?.adminUid?.let { adminUid ->
-//                        viewModel.sendNotification(adminUid, "Ordered", "Some products have been ordered...")
-//                    } ?: run {
-//                        Log.e("OrderPlaceActivity", "Admin UID is null")
-//                    }
-
-                      viewModel.sendNotification(order,"Ordered","Some products has been ordered...",adminUid)
-                    com.example.blinkit.utils.Utils.showToast(this,"Noti sent")
-
-                    //   }
-
-                }
-                for(products in cartProductsList){
-                    val count=products.productCount
-                    val stock=products.productStock?.minus(count!!)
-                    if (stock != null) {
-                        viewModel.saveProductsAfterOrder(stock,products)
-                    }
-                }
-            }
-
-        }
-    }
-
-    private fun getPaymentView() {
-
-        try {
-            PhonePe.getImplicitIntent(this, b2BPGRequest, "com.phonepe.simulator")?.let {
-                phonePayView.launch(it)
-            } ?: run {
-                com.example.blinkit.utils.Utils.showToast(this, "PhonePe Intent is null")
-            }
-        } catch (e: PhonePeInitException) {
-            com.example.blinkit.utils.Utils.showToast(this, e.message.toString())
-        }
-
-//        try {
-//            PhonePe.getImplicitIntent(this,b2BPGRequest,"com.phonepe.simulator")
-//                .let {
-//                    phonePayView.launch(it)
-//                }
-//        }
-//        catch (e: PhonePeInitException){
-//            com.example.blinkit.utils.Utils.showToast(this,e.message.toString())
-//        }
-
     }
 
     private fun saveAddress(alertDialog: AlertDialog?, addressLayoutBinding: AddressLayoutBinding) {
@@ -271,6 +146,126 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
         // payment work
         getPaymentView()
     }
+    private fun getPaymentView() {
+
+        try {
+            PhonePe.getImplicitIntent(this, b2BPGRequest, "com.phonepe.simulator")?.let {
+                phonePayView.launch(it)
+            } ?: run {
+                com.example.blinkit.utils.Utils.showToast(this, "PhonePe Intent is null")
+            }
+        } catch (e: PhonePeInitException) {
+            com.example.blinkit.utils.Utils.showToast(this, e.message.toString())
+        }
+
+    }
+
+val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+
+      if (it.resultCode == RESULT_OK){
+          checkStatus()
+      }
+
+    else{
+        com.example.blinkit.utils.Utils.showToast(this,"Network error ")
+          /// //==================== here API not working that why condition is false and we can done same work in if and else condition
+         // checkStatus()
+          ////=====================================================================
+
+    }
+}
+
+    private fun checkStatus() {
+        val xVerify=sha256("/pg/v1/status/${Constants.MERCHANT_ID}/${Constants.merchantTransactionId}${Constants.SALT_KEY}") + "###1"
+        val headers = mapOf(
+            "Content-Type" to "application/json",
+            "X-VERIFY" to xVerify,
+            "X-MERCHANT-ID" to Constants.MERCHANT_ID
+        )
+
+        lifecycleScope.launch {
+            viewModel.checkPayment(headers)
+            viewModel.paymentStatus.collect{status->
+                if (status){
+                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment done Successfully")
+
+                    // save order in database , delete product
+                    saveOrder()
+                    deleteCartProducts()
+                    com.example.blinkit.utils.Utils.hideDialog()
+
+                    startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
+                    finish()
+                }
+                else{
+//==================== here API not working that why condition is false and we can done same work in if and else condition
+                    saveOrder()
+                    deleteCartProducts()
+                    com.example.blinkit.utils.Utils.hideDialog()
+                    startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
+                    finish()
+//=====================================================================
+                   // com.example.blinkit.utils.Utils.hideDialog()
+                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment ! done")
+                }
+            }
+        }
+
+    }
+
+
+    private fun saveOrder() {
+        viewModel.getAllCartProducts().observe(this){cartProductsList ->
+
+            if (!cartProductsList.isEmpty()){
+
+                viewModel.getUserAddress { address ->
+                    val order = Orders(
+                        orderId =com.example.blinkit.utils.Utils.getRandomId(),
+                        orderList = cartProductsList,
+                        userAddress = address,
+                        orderStatus = 0,
+                        orderDate = com.example.blinkit.utils.Utils.getCurrentDate(),
+                        orderingUserUid = com.example.blinkit.utils.Utils.currentUser(),
+
+                        )
+                    viewModel.saveOrderedProducts(order,adminUid)
+                    com.example.blinkit.utils.Utils.showToast(this,"Save ordered products")
+
+
+                    viewModel.sendNotification(order,"Ordered","Some products has been ordered...",adminUid)
+                    com.example.blinkit.utils.Utils.showToast(this,"Noti sent")
+
+                    //   }
+
+                }
+                for(products in cartProductsList){
+                    val count=products.productCount
+                    val stock=products.productStock?.minus(count!!)
+                    if (stock != null) {
+                        viewModel.saveProductsAfterOrder(stock,products)
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun deleteCartProducts() {
+        lifecycleScope.launch {
+            viewModel.deleteCartProducts()
+            viewModel.savingCartItemCount(0)
+            cartListner?.hideCartLayout()
+        }
+
+    }
+
+//===========2 end===========================================
+
+
+
+
+
 
     private fun backButtonClick() {
         binding.tbCheckout.setNavigationOnClickListener {

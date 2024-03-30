@@ -10,9 +10,12 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.example.blinkit.databinding.ItemViewCartProductsBinding
 import com.example.blinkit.roomdb.CartProducts
+import com.example.blinkit.viewmodels.UserViewModel
 
 class AdapterCartProducts() : RecyclerView.Adapter<AdapterCartProducts.CartProductViewHolder>() {
     class CartProductViewHolder(val binding: ItemViewCartProductsBinding) : ViewHolder(binding.root){}
+
+
 
     val diffUtil= object : DiffUtil.ItemCallback<CartProducts>(){
         override fun areItemsTheSame(oldItem: CartProducts, newItem: CartProducts): Boolean {

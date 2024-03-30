@@ -2,6 +2,8 @@ package com.example.blinkit.auth_fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -37,8 +39,6 @@ class signUpEmailFragment : Fragment() {
         binding= FragmentSignUpEmailBinding.inflate(inflater,container,false)
 
         binding.signupBtn.setOnClickListener{
-//            startActivity(Intent(requireActivity(), MainActivity::class.java))
-//            requireActivity().finish()
             createUser()
         }
 
@@ -53,33 +53,72 @@ class signUpEmailFragment : Fragment() {
     }
 
     private fun createUser() {
-        val email=binding.signupEmail.text.toString()
-        val password=binding.signupPass.text.toString()
-        val name=binding.signupName.text.toString()
-        val address=binding.signupAddress.text.toString()
-        val phone=binding.signupPhone.text.toString()
+        val email = binding.signupEmail.text.toString()
+        val password = binding.signupPass.text.toString()
+        val name = binding.signupName.text.toString()
+        val address = binding.signupAddress.text.toString()
+        val phone = binding.signupPhone.text.toString()
 
-        val users= Users(Utils.currentUser(),name,phone,email,address,password)
+        val users = Users(Utils.currentUser(), name, phone, email, address, password)
 
-        viewModel.apply {
-            createUserWithEmail(email,password,users)
+        if (name.isEmpty()){
+            binding.signupName.error="Enter name"
+            binding.signupEmail.error="Enter email"
+            binding.signupPass.error="Enter password"
+            binding.signupAddress.error="Enter address"
+            binding.signupPhone.error="Enter phone"
+        }
+        else if (email.isEmpty()){
+            binding.signupEmail.error="Enter email"
+            binding.signupPass.error="Enter password"
+            binding.signupAddress.error="Enter address"
+            binding.signupPhone.error="Enter phone"
+        }
+        else if (password.isEmpty()){
+            binding.signupPass.error="Enter password"
+            binding.signupAddress.error="Enter address"
+            binding.signupPhone.error="Enter phone"
+        }
+        else if (address.isEmpty()){
+            binding.signupAddress.error="Enter address"
+            binding.signupPhone.error="Enter phone"
+        }
+        else if (phone.isEmpty()){
+            binding.signupPhone.error="Enter phone"
+        }
+        else{
             lifecycleScope.launch {
-                isSignInSuccessfully.apply {
-                    if (true){
-                        Utils.showToast(requireContext(),"Signup Successfully...!!")
-                        startActivity(Intent(requireContext(),MainActivity::class.java))
-                        requireActivity().finish()
-                    }
-                    else{
-                        Utils.showToast(requireContext(),"Signup Error...")
+                viewModel.apply {
+                    createUserWithEmail(email, password, users)
+                    lifecycleScope.launch {
+                        isSignInSuccessfully.apply {
+                            Utils.showDialog(requireContext(),"Sign Up...")
+
+                            if (true) {
+                                Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                                    Utils.hideDialog()
+                                    Utils.showToast(requireContext(), "Signup Successfully...!!")
+                                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                                    requireActivity().finish()
+                                },2000)
+                            }
+                            else {
+                                Utils.hideDialog()
+                                Utils.showToast(requireContext(), "Signup Error...")
+                            }
+
+
+
+                        }
                     }
                 }
+
+
             }
         }
 
 
 
     }
-
 
 }

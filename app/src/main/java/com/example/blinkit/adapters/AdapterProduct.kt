@@ -1,5 +1,6 @@
 package com.example.blinkit.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +14,14 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.example.blinkit.databinding.ItemViewProductBinding
 import com.example.blinkit.models.Product
 import com.example.blinkit.utils.FilteringProducts
+import com.example.blinkit.viewmodels.UserViewModel
 
 class AdapterProduct(
+    private val viewModel: UserViewModel,
     val onAddBtnClicked: (Product, ItemViewProductBinding) -> Unit,
     val onIncrementButtonClicked: (Product, ItemViewProductBinding) -> Unit,
-    val onDecrementButtonClicked: (Product, ItemViewProductBinding) -> Unit
+    val onDecrementButtonClicked: (Product, ItemViewProductBinding) -> Unit,
+
 ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable {
 
     class ProductViewHolder (val binding : ItemViewProductBinding): ViewHolder(binding.root) {
@@ -68,10 +72,13 @@ return differ.currentList.size
             tvProductPrice.text= "Rs"+product.productPrice
 
             if (product.itemCount!! > 0){
+              //  tvProductCount.text= viewModel.fetchAllProductsForCount(product.productRandomId!!).toString()
+
                 tvProductCount.text=product.itemCount.toString()
                 tvAddBtn.visibility= View.GONE
                 allProductCount.visibility= View.VISIBLE
             }
+
 
             tvAddBtn.setOnClickListener{
                 onAddBtnClicked(product,this)
@@ -82,6 +89,8 @@ return differ.currentList.size
             tvDecrementCount.setOnClickListener{
                 onDecrementButtonClicked(product, this)
             }
+
+
         }
 
     }

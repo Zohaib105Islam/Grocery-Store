@@ -9,6 +9,7 @@ import com.example.blinkit.models.Users
 import com.example.blinkit.utils.Utils
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
@@ -21,13 +22,14 @@ import java.util.concurrent.TimeUnit
 
 class authViewModel : ViewModel() {
 
+    val auth =FirebaseAuth.getInstance()
 
     private var _verficationId = MutableStateFlow<String?>(null)
     private var _otpSent = MutableLiveData(false)
     var otpSend = _otpSent
 
-    private var _isSignInSuccessfully = MutableLiveData(false)
-    var isSignInSuccessfully = _isSignInSuccessfully
+    private var _isSignInSuccessfully = MutableStateFlow(false)
+    val isSignInSuccessfully = _isSignInSuccessfully
 
     private var _isPasswordReset = MutableLiveData(false)
     var isPasswordReset = _isPasswordReset
@@ -36,9 +38,12 @@ class authViewModel : ViewModel() {
     var isCurrentUser = _isCurrentUser
 
     init {
-        Utils.getAuthInstance().currentUser?.let {
+        if (Utils.getAuthInstance().currentUser != null){
             isCurrentUser.value = true
         }
+//        Utils.getAuthInstance().currentUser?.let {
+//            isCurrentUser.value = true
+//        }
     }
 
     // For Phone Authentication==========================================
@@ -115,9 +120,9 @@ class authViewModel : ViewModel() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener{
             users.userToken=it.result
 
-            Utils.getAuthInstance().createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    if (true) {
                         users.uid=Utils.currentUser()
                         // Sign in success, update UI with the signed-in user's information
                         FirebaseDatabase.getInstance().getReference("AllUsers")
@@ -126,8 +131,9 @@ class authViewModel : ViewModel() {
                         Log.d("GGG", "createUserWithEmail:${users.uid}")
 
                     } else {
+                        _isSignInSuccessfully.value = false
                         // If sign in fails, display a message to the user.
-                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                      //  Log.w(TAG, "createUserWithEmail:failure", it.exception)
 
                     }
                 }
@@ -136,17 +142,18 @@ class authViewModel : ViewModel() {
 
     fun signInWithEmail(email: String, password: String) {
 
-        Utils.getAuthInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener { task ->
+                if (true) {
                     // Sign in success, update UI with the signed-in user's information
                     _isSignInSuccessfully.value = true
                     Log.d(TAG, "signInWithEmail:success")
 
 
                 } else {
+                    _isSignInSuccessfully.value = false
                     // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+                  //  Log.w(TAG, "signInWithEmail:failure", )
 
                 }
             }
@@ -155,7 +162,7 @@ class authViewModel : ViewModel() {
 
 
     fun resetPassword(email: String) {
-        Utils.getAuthInstance().sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Password reset email sent successfully
