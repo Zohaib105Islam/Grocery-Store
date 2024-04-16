@@ -11,36 +11,10 @@
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
-            android:id="@+id/action_splashFragment_to_chooseAuthFragment"
-            app:destination="@id/chooseAuthFragment"
+            android:id="@+id/action_splashFragment_to_singInEmailFragment"
+            app:destination="@id/singInEmailFragment"
             app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/signInPhoneFragment"
-        android:name="com.example.blinkit.auth_fragments.SignInPhoneFragment"
-        android:label="fragment_sign_in_phone"
-        tools:layout="@layout/fragment_sign_in_phone" >
-        <action
-            android:id="@+id/action_signInPhoneFragment_to_OTPFragment"
-            app:destination="@id/OTPFragment"></action>
-    </fragment>
-    <fragment
-        android:id="@+id/OTPFragment"
-        android:name="com.example.blinkit.auth_fragments.OTPFragment"
-        android:label="fragment_o_t_p"
-        tools:layout="@layout/fragment_o_t_p" />
-    <fragment
-        android:id="@+id/chooseAuthFragment"
-        android:name="com.example.blinkit.auth_fragments.chooseAuthFragment"
-        android:label="fragment_choose_auth"
-        tools:layout="@layout/fragment_choose_auth" >
-        <action
-            android:id="@+id/action_chooseAuthFragment_to_singInEmailFragment"
-            app:destination="@id/singInEmailFragment" />
-        <action
-            android:id="@+id/action_chooseAuthFragment_to_signInPhoneFragment"
-            app:destination="@id/signInPhoneFragment" />
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/signUpEmailFragment"

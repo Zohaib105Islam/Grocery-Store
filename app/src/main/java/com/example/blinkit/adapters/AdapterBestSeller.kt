@@ -46,11 +46,17 @@ class AdapterBestSeller(val onSeeAllButtonClicked: (Bestseller) -> Unit) : Recyc
 
             val minimumSize = minOf(listOfIv.size,productType.products?.size!!)
 
-            for (i in 0 until minimumSize){
-                listOfIv[i].visibility=View.VISIBLE
-                Glide.with(holder.itemView).load(productType.products[i].productImageUris?.get(i)).into(listOfIv[i])
+//            for (i in 0 until minimumSize){
+//                listOfIv[i].visibility=View.VISIBLE
+//                Glide.with(holder.itemView).load(productType.products[i].productImageUris?.get(i)).into(listOfIv[i])
+//
+//            }
 
+            for (i in 0 until minimumSize) {
+                listOfIv[i].visibility = View.VISIBLE
+                Glide.with(holder.itemView).load(productType.products[i].productImageUris?.get(0)).into(listOfIv[i])
             }
+
 
             if (productType.products.size > 3){
                 tvProductCount.visibility=View.VISIBLE

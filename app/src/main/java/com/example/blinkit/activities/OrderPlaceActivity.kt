@@ -7,20 +7,20 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.blinkit.adapters.AdapterCartProducts
-import com.example.blinkit.adapters.AdapterProduct
 import com.example.blinkit.databinding.ActivityOrderPlaceBinding
 import com.example.blinkit.databinding.AddressLayoutBinding
+import com.example.blinkit.databinding.ItemViewCartProductsBinding
 import com.example.blinkit.models.Orders
-import com.example.blinkit.models.Users
 import com.example.blinkit.roomdb.CartProducts
 import com.example.blinkit.utils.CartListner
 import com.example.blinkit.utils.Constants
+import com.example.blinkit.utils.Utils
 import com.example.blinkit.viewmodels.UserViewModel
-import com.google.firebase.installations.Utils
 import com.phonepe.intent.sdk.api.B2BPGRequest
 import com.phonepe.intent.sdk.api.B2BPGRequestBuilder
 import com.phonepe.intent.sdk.api.PhonePe
@@ -168,6 +168,7 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
 
     else{
         com.example.blinkit.utils.Utils.showToast(this,"Network error ")
+          Utils.hideDialog()
           /// //==================== here API not working that why condition is false and we can done same work in if and else condition
          // checkStatus()
           ////=====================================================================
@@ -234,7 +235,7 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
 
 
                     viewModel.sendNotification(order,"Ordered","Some products has been ordered...",adminUid)
-                    com.example.blinkit.utils.Utils.showToast(this,"Noti sent")
+                    //com.example.blinkit.utils.Utils.showToast(this,"Noti sent")
 
                     //   }
 
@@ -276,7 +277,10 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
     private fun getAllCartProducts() {
         viewModel.getAllCartProducts().observe(this){cartProductList->
 
-            adapterCartProducts= AdapterCartProducts()
+            adapterCartProducts= AdapterCartProducts(
+                ::onIncrementButtonClicked,
+                ::onDecrementButtonClicked
+            )
             binding.rvCheckOutProducts.adapter=adapterCartProducts
             adapterCartProducts.differ.submitList(cartProductList)
 
@@ -304,5 +308,75 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
             binding.tvGrandTotal.text=totalPrice.toString()
 
         }
+    }
+
+    fun onIncrementButtonClicked(product: CartProducts, productBinding: ItemViewCartProductsBinding){
+        var itemCountInc= productBinding.tvProductCount.text.toString().toInt()
+        itemCountInc++
+
+        if (product.productStock!! + 1 > itemCountInc){
+            productBinding.tvProductCount.text = itemCountInc.toString()
+
+            cartListner?.showCartLayout(1)
+
+            // step 2
+            product.productCount=itemCountInc
+            lifecycleScope.launch {
+                cartListner?.savingCartItemCount(1)
+                saveProductInRoomDb(product)
+                // viewModel.updateItemCount(product,itemCountInc)
+            }
+        }
+        else{
+            Utils.showToast(this,"No more stock available...")
+        }
+    }
+
+    fun onDecrementButtonClicked(product: CartProducts, productBinding: ItemViewCartProductsBinding){
+        var itemCountDec= productBinding.tvProductCount.text.toString().toInt()
+        itemCountDec--
+
+        // step 2
+        product.productCount=itemCountDec
+        lifecycleScope.launch {
+            cartListner?.savingCartItemCount(-1)
+            saveProductInRoomDb(product)
+            //  viewModel.updateItemCount(product,itemCountDec)
+        }
+
+        if (itemCountDec > 0){
+            productBinding.tvProductCount.text = itemCountDec.toString()
+        }
+        else{
+            lifecycleScope.launch { viewModel.deleteCartProduct(product.productRandomId!!) }
+            // productBinding.tvAddBtn.visibility= View.VISIBLE
+            productBinding.allProductCount.visibility= View.GONE
+            productBinding.tvProductCount.text = "0"
+        }
+        cartListner?.showCartLayout(-1)
+
+
+
+
+    }
+
+    fun saveProductInRoomDb(product: CartProducts) {
+
+        val cartProduct = CartProducts(
+            itemPushKey = product.itemPushKey!!,
+            productRandomId = product.productRandomId!!,
+            productTitle = product.productTitle,
+            productQuantity = product.productQuantity,
+            // productPrice = "Rs" + "${product.productPrice}",
+            productPrice = product.productPrice,
+            productCount = product.productCount,
+            productStock = product.productStock,
+            productImage = product.productImage,
+            productCategory = product.productCategory,
+            adminUid = product.adminUid,
+            productType = product.productType,
+        )
+        lifecycleScope.launch { viewModel.insertCartProduct(cartProduct) }
+
     }
 }

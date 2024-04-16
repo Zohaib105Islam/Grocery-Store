@@ -215,4 +215,79 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/allCartCheckOutJC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_bottom_sheet"
+        android:gravity="center|bottom"
+        android:padding="13dp"
+        android:visibility="visible"
+        android:weightSum="1"
+        app:layout_constraintBottom_toTopOf="@+id/allCartCheckOut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/allJazzCash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivJazzCash"
+                android:layout_width="39dp"
+                android:layout_height="match_parent"
+                android:padding="3.9dp"
+                android:src="@drawable/jazzcash" />
+
+            <TextView
+                android:id="@+id/tvJazzCash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="13dp"
+                android:text="Jazz Cash"
+                android:textSize="18.20sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnNextJC"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@drawable/et_background"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvPlaceOrderJC"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Place Order"
+                android:textColor="@color/black"
+                android:textSize="16.9sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:layout_width="19.50dp"
+                android:layout_height="19.50dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="6.50dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_arrow_drop_right" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

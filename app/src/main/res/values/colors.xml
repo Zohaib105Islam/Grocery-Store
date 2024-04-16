@@ -10,8 +10,14 @@
 
     <color name="grey">#B3A271</color>
 
-    <color name="iv_bg">#E1F5F8</color>
+    <color name="iv_bg">#E3E6EC</color>
 
     <color name="blue">#5EC2EF</color>
     <color name="orange">#FF9800</color>
+
+    <color name="lightgrey">#E3E6EC</color>
+
+    <color name="shimmer">#DDDDDD</color>
+
+
 </resources>

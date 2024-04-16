@@ -4,14 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/_103sdp"
     android:padding="@dimen/_3sdp"
-    android:layout_height="wrap_content">
+    android:layout_height="230dp">
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/productImage"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_95sdp"
-        android:background="@drawable/bg_bestseller"
+        android:background="@color/shimmer"
+        app:iss_auto_cycle="false"
+        app:iss_text_align="CENTER"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -76,49 +79,41 @@
         android:id="@+id/tvProductType"
         android:layout_width="match_parent"
         android:layout_height="34dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:maxLines="2"
-        android:gravity="center"
         android:layout_gravity="center"
-        android:text="Milk, Curd pan kjudfujncudfh"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:textStyle="bold"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="6dp"
+        android:background="#DDDDDD"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productImage" />
 
     <TextView
         android:id="@+id/tvTotalProducts"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="4 products"
+        android:background="#DDDDDD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvProductType" />
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="wrap_content"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/bg_cart"
+        android:background="#DDDDDD"
         android:paddingLeft="15dp"
         android:paddingTop="3dp"
         android:paddingRight="15dp"
         android:paddingBottom="3dp"
-        android:text="See all"
-        android:textColor="@color/green"
-        android:textSize="14.30sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTotalProducts" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

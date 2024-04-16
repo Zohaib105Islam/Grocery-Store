@@ -87,51 +87,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:id="@+id/allProductCount"
-                        android:layout_width="@dimen/_60sdp"
-                        android:layout_height="30dp"
-                        android:orientation="horizontal"
-                        android:weightSum="3"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tvDecrementCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="-"
-                            android:textSize="19.50sp"
-                            android:gravity="center"
-                            android:background="@drawable/et_background"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"/>
-
-                        <TextView
-                            android:id="@+id/tvProductCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textSize="19.50sp"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"/>
-
-                        <TextView
-                            android:id="@+id/tvIncrementCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+"
-                            android:textSize="19.50sp"
-                            android:background="@drawable/et_background"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            android:layout_weight="1"/>
-
-
-                    </LinearLayout>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,8 +24,12 @@ class SplashFragment : Fragment() {
 
     private val viewModel : authViewModel by viewModels()
 
+    private var isFragmentAttached = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Set the flag to indicate that the fragment is attached
+        isFragmentAttached = true
     }
 
     override fun onCreateView(
@@ -36,30 +40,39 @@ class SplashFragment : Fragment() {
         binding = FragmentSplashBinding.inflate(inflater, container, false)
 
 
+        // Check if the fragment is attached before accessing the ViewModel
+        if (isFragmentAttached) {
 
+            Handler(Looper.getMainLooper()).postDelayed({
+                viewModel.apply {
+                    lifecycleScope.launch {
+                        isCurrentUser.collect() {
+                            if (it == true) {
+                                startActivity(Intent(requireContext(), MainActivity::class.java))
+                                requireActivity().finish()
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            viewModel.apply {
-                lifecycleScope.launch{
-                    isCurrentUser.collect() {
-                        if (it == true){
-                            startActivity(Intent(requireContext(),MainActivity::class.java))
-                            requireActivity().finish()
+                            } else {
+                                findNavController().navigate(
+                                    R.id.action_splashFragment_to_singInEmailFragment
+                                )
 
-                        }else{
-                            findNavController().navigate(
-                                R.id.action_splashFragment_to_chooseAuthFragment)
-
+                            }
                         }
                     }
                 }
-            }
 
 
+            }, 2000)
 
-        }, 2000)
+        }
 
         return binding.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Reset the flag to indicate that the fragment is detached
+        isFragmentAttached = false
     }
 
 

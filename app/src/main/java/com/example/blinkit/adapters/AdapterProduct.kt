@@ -17,10 +17,7 @@ import com.example.blinkit.utils.FilteringProducts
 import com.example.blinkit.viewmodels.UserViewModel
 
 class AdapterProduct(
-    private val viewModel: UserViewModel,
     val onAddBtnClicked: (Product, ItemViewProductBinding) -> Unit,
-    val onIncrementButtonClicked: (Product, ItemViewProductBinding) -> Unit,
-    val onDecrementButtonClicked: (Product, ItemViewProductBinding) -> Unit,
 
 ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable {
 
@@ -71,24 +68,12 @@ return differ.currentList.size
 
             tvProductPrice.text= "Rs"+product.productPrice
 
-            if (product.itemCount!! > 0){
-              //  tvProductCount.text= viewModel.fetchAllProductsForCount(product.productRandomId!!).toString()
-
-                tvProductCount.text=product.itemCount.toString()
-                tvAddBtn.visibility= View.GONE
-                allProductCount.visibility= View.VISIBLE
-            }
 
 
             tvAddBtn.setOnClickListener{
                 onAddBtnClicked(product,this)
             }
-            tvIncrementCount.setOnClickListener{
-                onIncrementButtonClicked(product,this)
-            }
-            tvDecrementCount.setOnClickListener{
-                onDecrementButtonClicked(product, this)
-            }
+
 
 
         }

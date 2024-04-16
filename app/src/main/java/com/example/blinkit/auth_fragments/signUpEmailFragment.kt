@@ -91,7 +91,7 @@ class signUpEmailFragment : Fragment() {
                 viewModel.apply {
                     createUserWithEmail(email, password, users)
                     lifecycleScope.launch {
-                        isSignInSuccessfully.apply {
+                        isSignUpSuccessfully.apply {
                             Utils.showDialog(requireContext(),"Sign Up...")
 
                             if (true) {

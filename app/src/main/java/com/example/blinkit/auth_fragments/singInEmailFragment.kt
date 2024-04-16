@@ -107,7 +107,7 @@ class singInEmailFragment : Fragment() {
             Utils.showDialog(requireContext(),"Signing in...")
 
             viewModel.apply {
-                signInWithEmail(email, password)
+                signInWithEmail(requireContext(),email, password)
                 lifecycleScope.launch {
                     isSignInSuccessfully.apply {
                         if (true){

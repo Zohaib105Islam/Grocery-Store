@@ -111,11 +111,26 @@
             </LinearLayout>
 
 
+            <TextView
+                android:id="@+id/tvText"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No products available in this type"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold"
+                android:textColor="@color/yellow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/allBestSeller"/>
+
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvBestSeller"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="230dp"
                 android:layout_margin="@dimen/_5ssp"
                 android:layout_marginHorizontal="@dimen/_6ssp"
                 android:orientation="horizontal"
@@ -125,12 +140,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/allBestSeller"/>
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/allBestSeller">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+                    <include layout="@layout/item_view_bestseller_shimmer"/>
+
+                </LinearLayout>
+
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             <LinearLayout
                 android:id="@+id/allCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rvBestSeller">

@@ -16,6 +16,10 @@
     <color name="blue">#5EC2EF</color>
     <color name="orange">#FF9800</color>
 
+    <color name="lightgrey">#5A7175</color>
+
+    <color name="shimmer">#DDDDDD</color>
+
 
 
 </resources>

@@ -47,6 +47,15 @@ class OrdersFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.getAllOrders().collect { orderList ->
 
+                if (orderList.isEmpty()){
+                    binding.rvOrders.visibility=View.GONE
+                    binding.tvText.visibility=View.VISIBLE
+                }
+                else{
+                    binding.rvOrders.visibility=View.VISIBLE
+                    binding.tvText.visibility=View.GONE
+                }
+
                 if (orderList.isNotEmpty()) {
                     val orderedList = ArrayList<OrderedItems>()
                     for (orders in orderList) {
@@ -74,7 +83,9 @@ class OrdersFragment : Fragment() {
                     adapterOrders= AdapterOrders(requireContext(),::onOrderItemViewClicked)
                     binding.rvOrders.adapter=adapterOrders
                     adapterOrders.differ.submitList(orderedList)
+
                 }
+                binding.shimmerViewContainer.visibility = View.GONE
             }
         }
 
