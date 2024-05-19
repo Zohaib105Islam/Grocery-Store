@@ -2,12 +2,14 @@ package com.example.blinkit.user_fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blinkit.R
 import com.example.blinkit.activities.AuthActivity
@@ -15,6 +17,7 @@ import com.example.blinkit.databinding.AddressBookLayoutBinding
 import com.example.blinkit.databinding.FragmentProfileBinding
 import com.example.blinkit.utils.Utils
 import com.example.blinkit.viewmodels.UserViewModel
+import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
@@ -43,8 +46,23 @@ class ProfileFragment : Fragment() {
 
         onLogOutClicked()
 
+        setProfile()
+
+        // Fetch user data when the fragment is created
+        viewModel.fetchUserDataFromDatabase()
+
 
         return binding.root
+    }
+
+    private fun setProfile() {
+        viewModel.userData.observe(viewLifecycleOwner, { user ->
+            // Update UI with the fetched user data
+            user?.let {
+               binding.userName.text = user.userName
+                binding.myEmailPhone.text = user.userPhoneNumber
+            }
+        })
     }
 
     private fun onLogOutClicked() {
@@ -69,10 +87,14 @@ class ProfileFragment : Fragment() {
     private fun onAddressBookClicked() {
         binding.profileAddressBook.setOnClickListener {
             val addressBookLayoutBinding=AddressBookLayoutBinding.inflate(LayoutInflater.from(requireContext()))
-            viewModel.getUserAddress { address->
-                addressBookLayoutBinding.etAddress.setText(address.toString())
 
-            }
+            viewModel.userData.observe(viewLifecycleOwner, { user ->
+                // Update UI with the fetched user data
+                user?.let {
+                    addressBookLayoutBinding.etAddress.text = Editable.Factory.getInstance().newEditable(user.userAddress)
+
+                }
+            })
 
             val alertDialog=AlertDialog.Builder(requireContext())
                 .setView(addressBookLayoutBinding.root)

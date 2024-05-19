@@ -28,12 +28,12 @@ class authViewModel: ViewModel() {
     var isCurrentUser = _isCurrentUser
 
     init {
-        if (Utils.getAuthInstance().currentUser != null){
-            isCurrentUser.value = true
-        }
-//        Utils.getAuthInstance().currentUser?.let {
+//        if (Utils.getAuthInstance().currentUser != null){
 //            isCurrentUser.value = true
 //        }
+        Utils.getAuthInstance().currentUser?.let {
+            isCurrentUser.value = true
+        }
     }
 
 
@@ -71,7 +71,7 @@ class authViewModel: ViewModel() {
 
 
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(context){ task ->
+             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     _isSignInSuccessfully.value = true
                     // Sign in success, update UI with the signed-in user's information
@@ -87,20 +87,6 @@ class authViewModel: ViewModel() {
             }
 
 
-//        auth.signInWithEmailAndPassword(email, password)
-//            .addOnSuccessListener { task ->
-//
-//                if (task.isSuccessful){
-//                    _isSignInSuccessfully.value = true
-//                    Log.d(TAG, "signInWithEmail:success")
-//                }
-//
-//
-//            }
-//            .addOnFailureListener(){
-//                _isSignInSuccessfully.value = false
-//                Log.d("Error sign in", "Error sign in  : "+it.toString())
-//            }
 
     }
 

@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,12 +17,16 @@ import com.example.blinkit.adapters.AdapterCartProducts
 import com.example.blinkit.databinding.ActivityOrderPlaceBinding
 import com.example.blinkit.databinding.AddressLayoutBinding
 import com.example.blinkit.databinding.ItemViewCartProductsBinding
+import com.example.blinkit.databinding.JazzCashDeatilsBinding
+import com.example.blinkit.databinding.JazzCashMpinBinding
+import com.example.blinkit.databinding.JazzCashSuccessPaymentBinding
 import com.example.blinkit.models.Orders
 import com.example.blinkit.roomdb.CartProducts
 import com.example.blinkit.utils.CartListner
 import com.example.blinkit.utils.Constants
 import com.example.blinkit.utils.Utils
 import com.example.blinkit.viewmodels.UserViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.phonepe.intent.sdk.api.B2BPGRequest
 import com.phonepe.intent.sdk.api.B2BPGRequestBuilder
 import com.phonepe.intent.sdk.api.PhonePe
@@ -46,15 +52,45 @@ class OrderPlaceActivity : AppCompatActivity() {
 
     private lateinit var adminUid: String
 
+    private lateinit var address: String
+
+    private lateinit var totalAmount : String
+
+//    private lateinit var alertDialog: AlertDialog
+
+    private lateinit var bs: BottomSheetDialog
+    private lateinit var jazzCashDeatilsBinding: JazzCashDeatilsBinding
+    private lateinit var jazzCashMpinBinding: JazzCashMpinBinding
+    private lateinit var jazzCashSuccessPaymentBinding: JazzCashSuccessPaymentBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+//        // Initialize the alertDialog property
+//        alertDialog = AlertDialog.Builder(this).create()
+
+
+        // initialize jazz cash layouts
+        jazzCashDeatilsBinding= JazzCashDeatilsBinding.inflate(LayoutInflater.from(this))
+        jazzCashMpinBinding= JazzCashMpinBinding.inflate(LayoutInflater.from(this))
+        jazzCashSuccessPaymentBinding= JazzCashSuccessPaymentBinding.inflate(LayoutInflater.from(this))
+
+        // Fetch user data when the fragment is created
+        viewModel.fetchUserDataFromDatabase()
 
         backButtonClick()
         onPlaceOrderClicked()
         initializePhonePay()
 
+        jazzCashClicked()
+
         getAllCartProducts()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finish()
     }
 //===================1=================================
     private fun initializePhonePay() {
@@ -100,14 +136,11 @@ class OrderPlaceActivity : AppCompatActivity() {
 //==================2 ===============================================
     private fun onPlaceOrderClicked() {
         binding.btnNext.setOnClickListener{
-            com.example.blinkit.utils.Utils.showDialog(this,"Processing")
+            Utils.showDialog(this,"Processing")
             viewModel.getAddressStatus().observe(this){status->
                 if (status){
                     // payment work
-                    getPaymentView()
-
-                }
-                else{
+                   // getPaymentView()
                     val addressLayoutBinding =AddressLayoutBinding.inflate(LayoutInflater.from(this))
 
                     val alertDialog=AlertDialog.Builder(this)
@@ -117,6 +150,21 @@ class OrderPlaceActivity : AppCompatActivity() {
                     addressLayoutBinding.btnAdd.setOnClickListener{
                         saveAddress(alertDialog,addressLayoutBinding)
                     }
+
+                   // showAddressLayout()
+
+                }
+                else{
+                    val addressLayoutBinding =AddressLayoutBinding.inflate(LayoutInflater.from(this))
+
+                     val alertDialog=AlertDialog.Builder(this)
+                        .setView(addressLayoutBinding.root).create()
+                    alertDialog.show()
+
+                    addressLayoutBinding.btnAdd.setOnClickListener{
+                        saveAddress(alertDialog,addressLayoutBinding)
+                    }
+                   // showAddressLayout()
                 }
 
             }
@@ -124,7 +172,7 @@ class OrderPlaceActivity : AppCompatActivity() {
     }
 
     private fun saveAddress(alertDialog: AlertDialog?, addressLayoutBinding: AddressLayoutBinding) {
-        com.example.blinkit.utils.Utils.showDialog(this,"Processing...")
+       // Utils.showDialog(this,"Processing...")
 
         val userPinCode=addressLayoutBinding.etPinCode.text.toString()
         val userPhoneNumber=addressLayoutBinding.etPhoneNumber.text.toString()
@@ -132,16 +180,16 @@ class OrderPlaceActivity : AppCompatActivity() {
         val userDistrict=addressLayoutBinding.etDistrict.text.toString()
         val userAddress=addressLayoutBinding.etDescriptiveAddress.text.toString()
 
-        val address = "$userPinCode, $userDistrict($userState), $userAddress, $userPhoneNumber"
+        address = "$userPinCode, $userDistrict($userState), $userAddress, $userPhoneNumber"
 
 
         lifecycleScope.launch {
             viewModel.saveUserAddress(address)
             viewModel.saveAddressStatus()
         }
-        com.example.blinkit.utils.Utils.showToast(this,"Saved...")
+        Utils.showToast(this,"Saved...")
         alertDialog?.dismiss()
-        com.example.blinkit.utils.Utils.hideDialog()
+        Utils.hideDialog()
 
         // payment work
         getPaymentView()
@@ -152,10 +200,10 @@ class OrderPlaceActivity : AppCompatActivity() {
             PhonePe.getImplicitIntent(this, b2BPGRequest, "com.phonepe.simulator")?.let {
                 phonePayView.launch(it)
             } ?: run {
-                com.example.blinkit.utils.Utils.showToast(this, "PhonePe Intent is null")
+                Utils.showToast(this, "PhonePe Intent is null")
             }
         } catch (e: PhonePeInitException) {
-            com.example.blinkit.utils.Utils.showToast(this, e.message.toString())
+            Utils.showToast(this, e.message.toString())
         }
 
     }
@@ -167,7 +215,8 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
       }
 
     else{
-        com.example.blinkit.utils.Utils.showToast(this,"Network error ")
+        Utils.showToast(this,"Network error ")
+          Utils.hideDialog()
           Utils.hideDialog()
           /// //==================== here API not working that why condition is false and we can done same work in if and else condition
          // checkStatus()
@@ -188,12 +237,12 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
             viewModel.checkPayment(headers)
             viewModel.paymentStatus.collect{status->
                 if (status){
-                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment done Successfully")
+                    Utils.showToast(this@OrderPlaceActivity,"Payment done Successfully")
 
                     // save order in database , delete product
                     saveOrder()
                     deleteCartProducts()
-                    com.example.blinkit.utils.Utils.hideDialog()
+                    Utils.hideDialog()
 
                     startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
                     finish()
@@ -202,12 +251,12 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
 //==================== here API not working that why condition is false and we can done same work in if and else condition
                     saveOrder()
                     deleteCartProducts()
-                    com.example.blinkit.utils.Utils.hideDialog()
+                    Utils.hideDialog()
                     startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
                     finish()
 //=====================================================================
                    // com.example.blinkit.utils.Utils.hideDialog()
-                    com.example.blinkit.utils.Utils.showToast(this@OrderPlaceActivity,"Payment ! done")
+                    Utils.showToast(this@OrderPlaceActivity,"Payment is done")
                 }
             }
         }
@@ -216,30 +265,34 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
 
 
     private fun saveOrder() {
-        viewModel.getAllCartProducts().observe(this){cartProductsList ->
-
-            if (!cartProductsList.isEmpty()){
-
-                viewModel.getUserAddress { address ->
-                    val order = Orders(
-                        orderId =com.example.blinkit.utils.Utils.getRandomId(),
-                        orderList = cartProductsList,
-                        userAddress = address,
-                        orderStatus = 0,
-                        orderDate = com.example.blinkit.utils.Utils.getCurrentDate(),
-                        orderingUserUid = com.example.blinkit.utils.Utils.currentUser(),
+        viewModel.getAllCartProducts().observe(this) { cartProductsList ->
+            if (!cartProductsList.isEmpty()) {
+                    for (cartProduct in cartProductsList) {
+                        val order = Orders(
+                            orderId = Utils.getRandomId(),
+                            orderList = listOf(cartProduct), // Save each product separately
+                           // userAddress = user.userAddress,
+                            userAddress = address,
+                            orderStatus = 0,
+                            orderDate = Utils.getCurrentDate(),
+                            orderingUserUid = Utils.currentUser(),
+                            adminUid=cartProduct.adminUid
 
                         )
-                    viewModel.saveOrderedProducts(order,adminUid)
-                    com.example.blinkit.utils.Utils.showToast(this,"Save ordered products")
+                        viewModel.saveOrderedProducts(order)
+                        viewModel.sendNotification(order,"Ordered","Some products has been ordered...")
+
+                    }
+                    Utils.showToast(this@OrderPlaceActivity,"Save ordered products")
 
 
-                    viewModel.sendNotification(order,"Ordered","Some products has been ordered...",adminUid)
-                    //com.example.blinkit.utils.Utils.showToast(this,"Noti sent")
+
 
                     //   }
 
+
                 }
+
                 for(products in cartProductsList){
                     val count=products.productCount
                     val stock=products.productStock?.minus(count!!)
@@ -250,9 +303,9 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
             }
 
         }
-    }
 
-    private fun deleteCartProducts() {
+
+    fun deleteCartProducts() {
         lifecycleScope.launch {
             viewModel.deleteCartProducts()
             viewModel.savingCartItemCount(0)
@@ -264,18 +317,123 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
 //===========2 end===========================================
 
 
+//======== JazzCash Implementation start here ===============================================
+
+    fun jazzCashClicked() {
+        binding.btnNextJC.setOnClickListener {
+            Utils.showDialog(this,"Processing")
+            showAddressLayout()
+        }
+    }
+
+    fun showAddressLayout() {
+        val addressLayoutBinding =AddressLayoutBinding.inflate(LayoutInflater.from(this))
+
+        val alertDialog=AlertDialog.Builder(this)
+            .setView(addressLayoutBinding.root).create()
+        alertDialog.show()
+
+        addressLayoutBinding.btnAdd.setOnClickListener{
+            saveAddressJC(alertDialog,addressLayoutBinding)
+        }
+    }
+
+    private fun saveAddressJC(alertDialog: AlertDialog?, addressLayoutBinding: AddressLayoutBinding) {
+        Utils.showDialog(this,"Processing...")
+
+        val userPinCode=addressLayoutBinding.etPinCode.text.toString()
+        val userPhoneNumber=addressLayoutBinding.etPhoneNumber.text.toString()
+        val userState=addressLayoutBinding.etState.text.toString()
+        val userDistrict=addressLayoutBinding.etDistrict.text.toString()
+        val userAddress=addressLayoutBinding.etDescriptiveAddress.text.toString()
+
+        address = "$userPinCode, $userDistrict($userState), $userAddress, $userPhoneNumber"
 
 
+        lifecycleScope.launch {
+            viewModel.saveUserAddress(address)
+            viewModel.saveAddressStatus()
+            Utils.hideDialog()
+        }
+        Utils.showToast(this,"Saved...")
+        Utils.hideDialog()
+        alertDialog?.dismiss()
 
 
-    private fun backButtonClick() {
+        // payment work
+       // getPaymentView()
+        getPaymentViewJC(userPhoneNumber)
+    }
+
+    private fun getPaymentViewJC(userPhoneNumber: String) {
+
+        setJazzCashDetailsFields(userPhoneNumber)
+        bs= BottomSheetDialog(this)
+        bs.setContentView(jazzCashDeatilsBinding.root)
+        bs.show()
+
+        jazzCashDeatilsBinding.confirmBtn.setOnClickListener{
+            bs.dismiss()
+            bs= BottomSheetDialog(this)
+            bs.setContentView(jazzCashMpinBinding.root)
+            bs.show()
+        }
+
+        jazzCashMpinBinding.confirmMPINBtn.setOnClickListener{
+            bs.dismiss()
+            setJazzCashSuccessPaymentFileds(userPhoneNumber)
+            val alertDialog= AlertDialog.Builder(this).setView(jazzCashSuccessPaymentBinding.root).create()
+            alertDialog.show()
+            Utils.showToast(this@OrderPlaceActivity,"Payment done Successfully")
+
+            // save order in database , delete product
+            saveOrder()
+            deleteCartProducts()
+            Utils.hideDialog()
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                  alertDialog.dismiss()
+                startActivity(Intent(this@OrderPlaceActivity,MainActivity::class.java))
+                finish()
+            },3000)
+
+        }
+
+    }
+
+    private fun setJazzCashSuccessPaymentFileds(userPhoneNumber: String) {
+        jazzCashSuccessPaymentBinding.userAccountNo.text=userPhoneNumber
+        jazzCashSuccessPaymentBinding.payedAmount.text="Rs. " + totalAmount
+
+        viewModel.userData.observe(this){
+                jazzCashSuccessPaymentBinding.userAccountName.text=it.userName
+        }
+
+    }
+
+    fun setJazzCashDetailsFields(userPhoneNumber: String) {
+
+            jazzCashDeatilsBinding.userPhoneNo.text=userPhoneNumber
+
+        jazzCashDeatilsBinding.amount.text="Rs. " + totalAmount
+        jazzCashDeatilsBinding.totalAmount.text="Rs. " + totalAmount
+
+
+    }
+
+//============ JazzCash Implementation end here ===============================================
+
+
+     fun backButtonClick() {
         binding.tbCheckout.setNavigationOnClickListener {
             finish()
         }
     }
 
-    private fun getAllCartProducts() {
+     fun getAllCartProducts() {
         viewModel.getAllCartProducts().observe(this){cartProductList->
+
+             var totalPrice=0
 
             adapterCartProducts= AdapterCartProducts(
                 ::onIncrementButtonClicked,
@@ -284,7 +442,7 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
             binding.rvCheckOutProducts.adapter=adapterCartProducts
             adapterCartProducts.differ.submitList(cartProductList)
 
-            var totalPrice=0
+
 
             for (product in cartProductList){
                 val price =product.productPrice?.substring(2)?.toInt()
@@ -297,7 +455,7 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
                 Log.d("PriceDebug", "Item Count: $itemCount")
             }
 
-            binding.tvSubTotal.text=totalPrice.toString()
+            binding.tvSubTotal.text="Rs" + totalPrice.toString()
 
             Log.d("PriceDebug", "totalPrice: $totalPrice")
 
@@ -305,7 +463,9 @@ val phonePayView = registerForActivityResult(ActivityResultContracts.StartActivi
                 binding.tvDeliveryCharge.text="Rs15"
                 totalPrice+=15
             }
-            binding.tvGrandTotal.text=totalPrice.toString()
+            binding.tvGrandTotal.text="Rs" + totalPrice.toString()
+
+            totalAmount=totalPrice.toString()
 
         }
     }

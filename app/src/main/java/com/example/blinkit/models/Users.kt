@@ -1,6 +1,5 @@
 package com.example.blinkit.models
 
-import com.example.blinkit.utils.Utils
 
 data class Users(
     var uid : String? =null,

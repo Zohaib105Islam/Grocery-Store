@@ -12,8 +12,6 @@ import com.example.blinkit.adapters.AdapterCartProducts
 import com.example.blinkit.databinding.ActivityMainBinding
 import com.example.blinkit.databinding.BsCartProductsBinding
 import com.example.blinkit.databinding.ItemViewCartProductsBinding
-import com.example.blinkit.databinding.ItemViewProductBinding
-import com.example.blinkit.models.Product
 import com.example.blinkit.roomdb.CartProducts
 import com.example.blinkit.utils.CartListner
 import com.example.blinkit.utils.Utils

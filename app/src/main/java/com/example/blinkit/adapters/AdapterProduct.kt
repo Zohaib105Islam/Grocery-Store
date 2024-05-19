@@ -1,8 +1,7 @@
 package com.example.blinkit.adapters
 
-import android.util.Log
+import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -13,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.blinkit.databinding.ItemViewProductBinding
 import com.example.blinkit.models.Product
-import com.example.blinkit.utils.FilteringProducts
-import com.example.blinkit.viewmodels.UserViewModel
 
 class AdapterProduct(
     val onAddBtnClicked: (Product, ItemViewProductBinding) -> Unit,
+    val onItemViewClicked: (Product) -> Unit,
 
-) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable {
+    ) : RecyclerView.Adapter<AdapterProduct.ProductViewHolder>() , Filterable {
+
+    private val originalList: MutableList<Product> = mutableListOf()
 
     class ProductViewHolder (val binding : ItemViewProductBinding): ViewHolder(binding.root) {
 
@@ -78,14 +78,52 @@ return differ.currentList.size
 
         }
 
+        holder.itemView.setOnClickListener{
+            onItemViewClicked(product)
+        }
+
     }
 
-    val filter : FilteringProducts? = null
-    var originalList = ArrayList<Product>()
+
     override fun getFilter(): Filter {
 
-        if(filter == null) return FilteringProducts(this,originalList)
-        return filter
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val filteredList = mutableListOf<Product>()
+                val query = constraint.toString().trim().toLowerCase()
+                if (query.isEmpty()) {
+                    filteredList.addAll(originalList)
+                } else {
+                    originalList.forEach {
+                        if (
+                            it.productTitle!!.toLowerCase().contains(query) ||
+                            it.productCategory!!.toLowerCase().contains(query) ||
+                            it.productType!!.toLowerCase().contains(query) ||
+                            it.productPrice.toString().toLowerCase().contains(query) ||
+                            it.productPrice.toString().toLowerCase().contains(query) ||
+                            it.productUnit!!.toLowerCase().contains(query) ||
+                            it.productUnit!!.toLowerCase().contains(query) ||
+                            it.productQuantity.toString().toLowerCase().contains(query)
+                        ) {
+                            filteredList.add(it)
+                        }
+                    }
+                }
+                val results = FilterResults()
+                results.values = filteredList
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                differ.submitList(results?.values as MutableList<Product>?)
+            }
+        }
+    }
+
+    fun submitList(list: List<Product>) {
+        originalList.clear()
+        originalList.addAll(list)
+        differ.submitList(list)
     }
 
 }

@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.blinkit.R
 import com.example.blinkit.activities.MainActivity
 import com.example.blinkit.databinding.FragmentSplashBinding
+import com.example.blinkit.utils.Utils
 import com.example.blinkit.viewmodels.authViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -21,8 +22,6 @@ import kotlinx.coroutines.launch
 class SplashFragment : Fragment() {
 
     private lateinit var binding: FragmentSplashBinding
-
-    private val viewModel : authViewModel by viewModels()
 
     private var isFragmentAttached = false
 
@@ -44,29 +43,27 @@ class SplashFragment : Fragment() {
         if (isFragmentAttached) {
 
             Handler(Looper.getMainLooper()).postDelayed({
-                viewModel.apply {
-                    lifecycleScope.launch {
-                        isCurrentUser.collect() {
-                            if (it == true) {
-                                startActivity(Intent(requireContext(), MainActivity::class.java))
-                                requireActivity().finish()
-
-                            } else {
-                                findNavController().navigate(
-                                    R.id.action_splashFragment_to_singInEmailFragment
-                                )
-
-                            }
-                        }
-                    }
-                }
-
+                checkUser()
 
             }, 2000)
 
         }
 
         return binding.root
+    }
+
+    fun checkUser(){
+        val user = FirebaseAuth.getInstance().currentUser?.uid
+        if(user != null){
+            startActivity(Intent(requireContext(), MainActivity::class.java))
+            requireActivity().finish()
+        }
+        else {
+            findNavController().navigate(
+                R.id.action_splashFragment_to_singInEmailFragment
+            )
+
+        }
     }
 
     override fun onDestroy() {

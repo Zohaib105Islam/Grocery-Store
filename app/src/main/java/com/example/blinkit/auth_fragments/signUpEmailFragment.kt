@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blinkit.R
 import com.example.blinkit.activities.MainActivity
@@ -17,7 +17,8 @@ import com.example.blinkit.databinding.FragmentSignUpEmailBinding
 import com.example.blinkit.models.Users
 import com.example.blinkit.utils.Utils
 import com.example.blinkit.viewmodels.authViewModel
-import kotlinx.coroutines.launch
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class signUpEmailFragment : Fragment() {
@@ -87,38 +88,46 @@ class signUpEmailFragment : Fragment() {
             binding.signupPhone.error="Enter phone"
         }
         else{
-            lifecycleScope.launch {
-                viewModel.apply {
-                    createUserWithEmail(email, password, users)
-                    lifecycleScope.launch {
-                        isSignUpSuccessfully.apply {
-                            Utils.showDialog(requireContext(),"Sign Up...")
 
-                            if (true) {
-                                Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                                    Utils.hideDialog()
-                                    Utils.showToast(requireContext(), "Signup Successfully...!!")
-                                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                                    requireActivity().finish()
-                                },2000)
-                            }
-                            else {
-                                Utils.hideDialog()
-                                Utils.showToast(requireContext(), "Signup Error...")
-                            }
+                Utils.showDialog(requireContext(),"Sign Up...")
+                createUserWithEmail(email,password,users)
 
-
-
-                        }
-                    }
-                }
-
-
-            }
         }
 
 
 
+    }
+
+    fun createUserWithEmail(email: String, password: String, users: Users) {
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener{
+            users.userToken=it.result
+
+            Utils.getAuthInstance().createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+
+                    users.uid=Utils.currentUser()
+
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        Utils.hideDialog()
+                        Utils.showToast(requireContext(), "Signup Successfully...!!")
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        requireActivity().finish()
+                    },2000)
+
+                    FirebaseDatabase.getInstance().getReference("AllUsers")
+                        .child(Utils.currentUser()!!).child("UserInfo").setValue(users)
+
+                    Log.d("GGG", "createUserWithEmail:${users.uid}")
+
+                }
+                .addOnFailureListener(){
+                    Utils.hideDialog()
+                    Utils.showToast(requireContext(), "Signup Error ${it.toString()}")
+
+                    Log.d("Error sign up", "Error sign up  : "+it.toString())
+                }
+        }
     }
 
 }

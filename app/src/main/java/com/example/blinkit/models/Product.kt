@@ -1,6 +1,5 @@
 package com.example.blinkit.models
 
-import java.util.UUID
 
 data class Product(
     var productRandomId : String? =null,
@@ -15,4 +14,5 @@ data class Product(
     var itemCount : Int? = null,
     var adminUid : String? = null,
     var productImageUris : ArrayList<String?> ? = null,
+//    var timestamp: Long? = null,
 )

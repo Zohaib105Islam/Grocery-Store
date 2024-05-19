@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="03090486206"
+        android:text="03xxxxxxxxx"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="@dimen/_15ssp"

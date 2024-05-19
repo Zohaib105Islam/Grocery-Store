@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -52,31 +51,29 @@ class SearchFragment : Fragment() {
 
         searchProducts()
 
+
         return binding.root
     }
 
 
     private fun searchProducts() {
-        binding.etSearch.addTextChangedListener(object  : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            }
+        binding.etSearch.addTextChangedListener(object  : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().trim()
-                adapterProduct.filter?.filter(query)
-                Utils.showToast(requireContext(),query)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
+                adapterProduct.filter?.filter(s)
 
             }
+
+            override fun afterTextChanged(s: Editable?) {}
 
         })
     }
 
     private fun backToHomeFragment() {
-        binding.searchCv.setOnClickListener{
+        binding.btnBack.setOnClickListener{
             findNavController().navigate(R.id.action_searchFragment_to_homeFragment)
         }
     }
@@ -98,15 +95,33 @@ class SearchFragment : Fragment() {
 
                 adapterProduct = AdapterProduct(
                     ::onAddBtnClicked,
-
+                    ::onItemViewClicked
                 )
                 binding.rvProducts.adapter=adapterProduct
-                adapterProduct.differ.submitList(it)
-                adapterProduct.originalList = it as ArrayList<Product>
+                adapterProduct.submitList(it)
                 binding.shimmerViewContainer.visibility = View.GONE
 
             }
         }
+    }
+
+    private fun onItemViewClicked(product: Product){
+
+        val bundle=Bundle()
+        bundle.putString("productRandomId",product.productRandomId)
+        bundle.putString("itemPushKey",product.itemPushKey)
+        bundle.putString("productTitle",product.productTitle)
+        bundle.putString("productQuantity",product.productQuantity.toString())
+        bundle.putString("productUnit",product.productUnit)
+        bundle.putString("productPrice",product.productPrice.toString())
+        bundle.putString("productStock",product.productStock.toString())
+        bundle.putString("productCategory",product.productCategory)
+        bundle.putString("productType",product.productType)
+        bundle.putString("itemCount",product.itemCount.toString())
+        bundle.putString("adminUid",product.adminUid)
+        bundle.putStringArrayList("productImageUris",product.productImageUris)
+       // bundle.putString("timestamp",product.timestamp.toString())
+        findNavController().navigate(R.id.action_searchFragment_to_productDetailsFragment,bundle)
     }
 
     fun onAddBtnClicked(product: Product , productBinding: ItemViewProductBinding){

@@ -19,17 +19,33 @@
         app:layout_constraintTop_toTopOf="parent"
         >
 
-        <EditText
-            android:id="@+id/etSearch"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            android:textSize="@dimen/_15ssp"
-            android:textColorHint="@color/black"
-            android:hint="Search"
-            android:drawablePadding="10dp"
-            android:drawableLeft="@drawable/arrowback_icon"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:padding="10dp"
+                android:src="@drawable/arrowback_icon"/>
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/_15ssp"
+                android:textColorHint="@color/black"
+                android:hint="Search"
+                android:drawablePadding="10dp"/>
+        </LinearLayout>
+
+
 
     </androidx.cardview.widget.CardView>
 

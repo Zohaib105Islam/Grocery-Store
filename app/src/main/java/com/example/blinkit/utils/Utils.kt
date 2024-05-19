@@ -2,17 +2,12 @@ package com.example.blinkit.utils
 
 import android.app.AlertDialog
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.blinkit.databinding.ProgressDialogBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -31,7 +26,7 @@ object Utils {
         dialog?.dismiss()
     }
 
-    fun showToast(context: Context , message: String){
+    fun showToast(context: Context, message: String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
 private var firebaseAuthInstance: FirebaseAuth? = null
@@ -76,6 +71,11 @@ return firebaseAuthInstance!!
         val dateFormat = SimpleDateFormat("dd-M-yyyy", Locale.getDefault())
         val currentDate = Date()
         return dateFormat.format(currentDate)
+    }
+
+    fun timeStamp(): Long {
+        val timestamp = System.currentTimeMillis()
+        return timestamp
     }
 
 }

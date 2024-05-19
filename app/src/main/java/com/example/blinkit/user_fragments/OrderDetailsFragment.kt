@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.blinkit.R
-import com.example.blinkit.adapters.AdapterCartProducts
 import com.example.blinkit.adapters.AdapterOrderDeatils
 import com.example.blinkit.databinding.FragmentOrderDetailsBinding
 import com.example.blinkit.databinding.ItemViewCartProductsBinding

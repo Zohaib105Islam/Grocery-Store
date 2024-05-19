@@ -23,5 +23,7 @@ data class CartProducts(
     var productImage: String ? = null,
 
     var productType: String?=null,
+
+   // var timestamp: Long? = null,
 ) {
 }

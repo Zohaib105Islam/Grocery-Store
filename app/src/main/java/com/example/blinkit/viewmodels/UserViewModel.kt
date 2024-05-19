@@ -14,6 +14,7 @@ import com.example.blinkit.models.Notification
 import com.example.blinkit.models.NotificationData
 import com.example.blinkit.models.Orders
 import com.example.blinkit.models.Product
+import com.example.blinkit.models.Users
 import com.example.blinkit.roomdb.CartProducts
 import com.example.blinkit.roomdb.CartProductsDao
 import com.example.blinkit.roomdb.CartProductsDatabase
@@ -47,6 +48,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _paymentStatus = MutableStateFlow<Boolean>(false)
     val paymentStatus = _paymentStatus
+
+    private val _userData = MutableLiveData<Users>()
+    val userData: LiveData<Users> = _userData
 
     //Room DB
     suspend fun insertCartProduct(products: CartProducts) {
@@ -335,31 +339,64 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         FirebaseAuth.getInstance().signOut()
     }
 
-    fun getUserAddress(callback: (String?) -> Unit) {
+    fun getUserAddress(): Flow<List<Users>> = callbackFlow {
         val db = FirebaseDatabase.getInstance().getReference("AllUsers").child(Utils.currentUser()!!)
-            .child("UserInfo").child("userAddress")
+            .child("UserInfo")
+            //.child("userAddress")
 
-        db.addListenerForSingleValueEvent(object : ValueEventListener {
+        val users = ArrayList<Users>()
+
+        val eventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val address = snapshot.getValue(String::class.java)
-                    callback(address)
-                } else {
-                    callback(null)
+//                if (snapshot.exists()) {
+//                    val address : Users? = snapshot.getValue(Users::class.java)
+//                    callback(address)
+//                } else {
+//                    callback(null)
+//                }
+                for (user in snapshot.children) {
+                    val user1 = user.getValue(Users::class.java)
+                    user1?.let {
+                        users.add(it)
+                    }
                 }
+                trySend(users)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                callback(null)
+                trySend(emptyList())
             }
 
-        })
+        }
+
+        db.addValueEventListener(eventListener)
+
+        awaitClose { db.removeEventListener(eventListener) }
 
     }
 
-    fun saveOrderedProducts(orders: Orders, adminUid: String) {
-        orders.adminUid=adminUid
-        FirebaseDatabase.getInstance().getReference("Admins").child(adminUid).child("AdminOrders")
+        fun fetchUserDataFromDatabase() {
+            FirebaseDatabase.getInstance().getReference("AllUsers").child(Utils.currentUser()!!)
+                .child("UserInfo")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        // Convert DataSnapshot to Users object
+                        val user = snapshot.getValue(Users::class.java)
+                        // Update LiveData with the fetched user data
+                        _userData.postValue(user!!)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
+        }
+
+
+
+    fun saveOrderedProducts(orders: Orders) {
+
+        FirebaseDatabase.getInstance().getReference("Admins").child(orders.adminUid!!).child("AdminOrders")
             .child(orders.orderId!!).setValue(orders)
         FirebaseDatabase.getInstance().getReference("AllProductsDetails").child("AllOrders")
             .child(orders.orderId!!).setValue(orders)
@@ -433,21 +470,21 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-     fun sendNotification(orders: Orders, title: String, message: String,adminUid: String) {
+     fun sendNotification(orders: Orders, title: String, message: String) {
 
         // Log.d("NotiApp", "adminUid : ${adminUid}")
-         orders.adminUid=adminUid
+        // orders.adminUid=adminUid
 
         val getToken =
-            FirebaseDatabase.getInstance().getReference("Admins").child(adminUid).child("AdminInfo")
+            FirebaseDatabase.getInstance().getReference("Admins").child(orders.adminUid!!).child("AdminInfo")
                 .child("adminToken").get()
         getToken.addOnCompleteListener { task ->
             val token = task.result.getValue(String::class.java)
            // val token = "cx_yaL35QhyG-fd8LKQ9es:APA91bHHM1LzgU3qBBIJ35szVOTTr9mHql2lRCqOuOAl8sPjXp5IruHxUWSd5mSF6MXDODR7sIZSuHIgBAIHZlUSmQX-zj4NfhtrquW000Q7cQXagO7uukcMXyfIEEXZzlVU7s6m4xxI"
-            Log.d("NotiApp", "Token : ${token}")
+            Log.d("NotiApp1", "Token : ${token}")
             val notification = Notification(token, NotificationData(title, message))
 
-            Log.d("NotiApp", "Send Notification: ${notification}")
+            Log.d("NotiApp2", "Send Notification: ${notification}")
 
             ApiUtilities.notificationApi.sendNotification(notification)
                 .enqueue(object : Callback<Notification> {
@@ -456,14 +493,14 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                         response: Response<Notification>
                     ) {
                         if (response.isSuccessful) {
-                            Log.d("NotiApp", "Send Notification")
+                            Log.d("NotiApp3", "Send Notification")
 //                            Log.d("NotiApp", "Send Notification: ${token}")
 //                            Log.d("NotiApp", "Send Notification: ${notification}")
                         }
                     }
 
                     override fun onFailure(call: Call<Notification>, t: Throwable) {
-                        Log.d("NotiApp", "Send not  Notification , error")
+                        Log.d("NotiApp4", "Send not  Notification , error")
                     }
 
                 })

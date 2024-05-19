@@ -96,11 +96,31 @@ class HomeFragment : Fragment() {
 
         adapterProduct= AdapterProduct(
             ::onAddBtnClicked,
+            ::onItemViewClicked,
 
         )
         bsSeeAllBinding.rvProducts.adapter=adapterProduct
         adapterProduct.differ.submitList(productType.products)
         bs.show()
+
+    }
+    private fun onItemViewClicked(product: Product){
+
+        val bundle=Bundle()
+        bundle.putString("productRandomId",product.productRandomId)
+        bundle.putString("itemPushKey",product.itemPushKey)
+        bundle.putString("productTitle",product.productTitle)
+        bundle.putString("productQuantity",product.productQuantity.toString())
+        bundle.putString("productUnit",product.productUnit)
+        bundle.putString("productPrice",product.productPrice.toString())
+        bundle.putString("productStock",product.productStock.toString())
+        bundle.putString("productCategory",product.productCategory)
+        bundle.putString("productType",product.productType)
+        bundle.putString("itemCount",product.itemCount.toString())
+        bundle.putString("adminUid",product.adminUid)
+        bundle.putStringArrayList("productImageUris",product.productImageUris)
+       // bundle.putString("timestamp",product.timestamp.toString())
+        findNavController().navigate(R.id.action_homeFragment_to_productDetailsFragment,bundle)
 
     }
     fun onAddBtnClicked(product: Product , productBinding: ItemViewProductBinding){
